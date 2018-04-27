@@ -20,8 +20,7 @@ module Knapsack
       private
 
       def post_assign_test_files_to_node
-        assign_slow_test_files
-        assign_remaining_test_files
+        assign_test_files
         sort_assigned_test_files
       end
 
@@ -46,45 +45,23 @@ module Knapsack
         ci_node_total.times do |index|
           @node_tests << {
             node_index: index,
-            time_left: node_time_execution,
+            time: 0,
             test_files_with_time: []
           }
         end
       end
 
-      def assign_slow_test_files
-        @not_assigned_test_files = []
-        node_index = 0
+      def assign_test_files
         sorted_report_with_existing_tests.each do |test_file_with_time|
-          assign_slow_test_file(node_index, test_file_with_time)
-          node_index += 1
-          node_index %= ci_node_total
-        end
-      end
-
-      def assign_slow_test_file(node_index, test_file_with_time)
-        time = test_file_with_time[1]
-        time_left = node_tests[node_index][:time_left] - time
-
-        if time_left >= 0 or node_tests[node_index][:test_files_with_time].empty?
-          node_tests[node_index][:time_left] -= time
-          node_tests[node_index][:test_files_with_time] << test_file_with_time
-        else
-          @not_assigned_test_files << test_file_with_time
-        end
-      end
-
-      def assign_remaining_test_files
-        @not_assigned_test_files.each do |test_file_with_time|
-          index = node_with_max_time_left
+          index = node_with_min_time
           time = test_file_with_time[1]
-          node_tests[index][:time_left] -= time
+          node_tests[index][:time] += time
           node_tests[index][:test_files_with_time] << test_file_with_time
         end
       end
 
-      def node_with_max_time_left
-        node_test = node_tests.max { |a,b| a[:time_left] <=> b[:time_left] }
+      def node_with_min_time
+        node_test = node_tests.min { |a,b| a[:time] <=> b[:time] }
         node_test[:node_index]
       end
     end

@@ -133,7 +133,7 @@ describe Knapsack::Distributors::ReportDistributor do
       it do
         expect(distributor.node_tests[0]).to eql({
           :node_index => 0,
-          :time_left => -0.5,
+          :time => 9.0,
           :test_files_with_time => [
             ["g_spec.rb", 9.0]
           ]
@@ -143,12 +143,11 @@ describe Knapsack::Distributors::ReportDistributor do
       it do
         expect(distributor.node_tests[1]).to eql({
           :node_index => 1,
-          :time_left => 0.0,
+          :time => 8.0,
           :test_files_with_time => [
             ["f_spec.rb", 3.5],
             ["d_spec.rb", 2.5],
-            ["b_spec.rb", 1.5],
-            ["a_spec.rb", 1.0]
+            ["c_spec.rb", 2.0]
           ]
         })
       end
@@ -156,11 +155,12 @@ describe Knapsack::Distributors::ReportDistributor do
       it do
         expect(distributor.node_tests[2]).to eql({
           :node_index => 2,
-          :time_left => 0.5,
+          :time => 8.5,
           :test_files_with_time => [
             ["i_spec.rb", 3.0],
             ["h_spec.rb", 3.0],
-            ["c_spec.rb", 2.0]
+            ["b_spec.rb", 1.5],
+            ["a_spec.rb", 1.0]
           ]
         })
       end
@@ -172,8 +172,7 @@ describe Knapsack::Distributors::ReportDistributor do
           expect(distributor.tests_for_node(1)).to eql([
             'f_spec.rb',
             'd_spec.rb',
-            'b_spec.rb',
-            'a_spec.rb'
+            'c_spec.rb'
           ])
         end
       end
